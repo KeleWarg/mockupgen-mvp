@@ -97,7 +97,10 @@ btn3d.addEventListener('click', () => {
   show3d = !show3d;
   panel3d.classList.toggle('visible', show3d);
   btn3d.classList.toggle('active', show3d);
-  if (show3d) exitAdjustBg();
+  if (show3d) {
+    exitAdjustBg();
+    if (typeof closeScreenPanel === 'function') closeScreenPanel();
+  }
 });
 
 document.getElementById('done-3d').addEventListener('click', () => {
@@ -182,6 +185,7 @@ function enterAdjustBg() {
     panel3d.classList.remove('visible');
     btn3d.classList.remove('active');
   }
+  if (typeof closeScreenPanel === 'function') closeScreenPanel();
 }
 
 function exitAdjustBg() {
@@ -249,21 +253,119 @@ const DEVICE_SCREENS = [
   { input: 'ipad-landscape-input', screen: 'ipad-landscape-screen', placeholder: 'ipad-landscape-placeholder' },
 ];
 
+const screenPos = {};
+const screenPanel = document.getElementById('screen-panel');
+const screenPanelTitle = document.getElementById('screen-panel-title');
+const screenScaleSlider = document.getElementById('screen-scale');
+const screenXSlider = document.getElementById('screen-x');
+const screenYSlider = document.getElementById('screen-y');
+const screenScaleVal = document.getElementById('screen-scale-val');
+const screenXVal = document.getElementById('screen-x-val');
+const screenYVal = document.getElementById('screen-y-val');
+
+let activeScreenKey = null;
+
+const SCREEN_LABELS = {
+  'ipad-portrait-screen': 'iPad Portrait',
+  'iphone-screen': 'iPhone',
+  'ipad-landscape-screen': 'iPad Landscape',
+};
+
+function applyScreenPos(key) {
+  const el = document.getElementById(key);
+  const pos = screenPos[key];
+  el.style.objectPosition = `${pos.x}% ${pos.y}%`;
+  el.style.objectFit = pos.zoom < 100 ? 'contain' : 'cover';
+  el.style.transform = pos.zoom !== 100 ? `scale(${pos.zoom / 100})` : '';
+}
+
+function syncScreenSliders(key) {
+  const pos = screenPos[key];
+  screenScaleSlider.value = pos.zoom;
+  screenXSlider.value = pos.x;
+  screenYSlider.value = pos.y;
+  screenScaleVal.textContent = pos.zoom + '%';
+  screenXVal.textContent = pos.x + '%';
+  screenYVal.textContent = pos.y + '%';
+}
+
+function openScreenPanel(key) {
+  activeScreenKey = key;
+  screenPanelTitle.textContent = SCREEN_LABELS[key] || 'Adjust Screen';
+  syncScreenSliders(key);
+  document.getElementById(key).closest('.device').classList.add('screen-editing');
+
+  if (show3d) { show3d = false; panel3d.classList.remove('visible'); btn3d.classList.remove('active'); }
+  if (adjustBg) exitAdjustBg();
+  screenPanel.classList.add('visible');
+}
+
+function closeScreenPanel() {
+  screenPanel.classList.remove('visible');
+  if (activeScreenKey) {
+    document.getElementById(activeScreenKey).closest('.device').classList.remove('screen-editing');
+  }
+  activeScreenKey = null;
+}
+
+['screen-scale', 'screen-x', 'screen-y'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function () {
+    if (!activeScreenKey) return;
+    const pos = screenPos[activeScreenKey];
+    if (id === 'screen-scale') pos.zoom = parseInt(this.value);
+    else if (id === 'screen-x') pos.x = parseInt(this.value);
+    else pos.y = parseInt(this.value);
+    applyScreenPos(activeScreenKey);
+    syncScreenSliders(activeScreenKey);
+  });
+});
+
+document.getElementById('screen-reset').addEventListener('click', () => {
+  if (!activeScreenKey) return;
+  screenPos[activeScreenKey] = { x: 50, y: 50, zoom: 100 };
+  applyScreenPos(activeScreenKey);
+  syncScreenSliders(activeScreenKey);
+});
+
+document.getElementById('screen-done').addEventListener('click', closeScreenPanel);
+
+document.getElementById('screen-replace').addEventListener('click', () => {
+  if (!activeScreenKey) return;
+  const d = DEVICE_SCREENS.find(d => d.screen === activeScreenKey);
+  if (d) document.getElementById(d.input).click();
+});
+
 DEVICE_SCREENS.forEach(d => {
-  document.getElementById(d.input).addEventListener('change', function (e) {
+  const screenEl = document.getElementById(d.screen);
+  const inputEl = document.getElementById(d.input);
+  const placeholderEl = document.getElementById(d.placeholder);
+  const key = d.screen;
+  screenPos[key] = { x: 50, y: 50, zoom: 100 };
+
+  inputEl.addEventListener('change', function (e) {
     const f = e.target.files[0];
     if (!f) return;
     const r = new FileReader();
     r.onload = ev => {
-      document.getElementById(d.screen).src = ev.target.result;
-      document.getElementById(d.screen).style.display = 'block';
-      document.getElementById(d.placeholder).style.display = 'none';
+      screenEl.src = ev.target.result;
+      screenEl.style.display = 'block';
+      placeholderEl.style.display = 'none';
+      screenPos[key] = { x: 50, y: 50, zoom: 100 };
+      applyScreenPos(key);
+      if (activeScreenKey === key) syncScreenSliders(key);
     };
     r.readAsDataURL(f);
   });
-  document.getElementById(d.screen).addEventListener('click', () =>
-    document.getElementById(d.input).click()
-  );
+
+  screenEl.addEventListener('click', e => {
+    if (screenEl.style.display === 'none') return;
+    e.preventDefault();
+    if (activeScreenKey === key) { closeScreenPanel(); return; }
+    if (activeScreenKey) {
+      document.getElementById(activeScreenKey).closest('.device').classList.remove('screen-editing');
+    }
+    openScreenPanel(key);
+  });
 });
 
 // ══════════════════════════

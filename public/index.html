@@ -99,6 +99,20 @@
     </div>
   </div>
 
+  <!-- ── SCREEN ADJUST PANEL ── -->
+  <div class="side-panel" id="screen-panel">
+    <div class="panel-title" id="screen-panel-title">Adjust Screen</div>
+    <div class="panel-row"><span class="panel-label">Scale</span><input type="range" class="panel-slider" id="screen-scale" min="50" max="300" step="5" value="100" /><span class="panel-value" id="screen-scale-val">100%</span></div>
+    <div class="panel-row"><span class="panel-label">X Pos</span><input type="range" class="panel-slider" id="screen-x" min="0" max="100" value="50" /><span class="panel-value" id="screen-x-val">50%</span></div>
+    <div class="panel-row"><span class="panel-label">Y Pos</span><input type="range" class="panel-slider" id="screen-y" min="0" max="100" value="50" /><span class="panel-value" id="screen-y-val">50%</span></div>
+    <div class="panel-hint">Click an uploaded screenshot to adjust</div>
+    <div style="display:flex;gap:6px;">
+      <button class="panel-btn" id="screen-reset">Reset</button>
+      <button class="panel-btn" id="screen-replace">Replace Image</button>
+      <button class="panel-btn" id="screen-done" style="border-color:#007AC8;color:#007AC8;">Done</button>
+    </div>
+  </div>
+
   <!-- ── CANVAS ── -->
   <div class="canvas-wrapper">
     <div class="scene" id="scene">
@@ -172,7 +186,8 @@
     <p>
       <code>3D View</code> — perspective presets + per-device rotation ·
       <code>Adjust BG</code> — pan & zoom background ·
-      Click devices to add screenshots · <code>Save ↓</code> to download as PNG<br>
+      Click devices to add screenshots · Click uploaded images to adjust scale & position ·
+      <code>Save ↓</code> to download as PNG<br>
       Backgrounds: <a href="https://unsplash.com/s/photos/stucco-wall" target="_blank">stucco</a> ·
       <a href="https://unsplash.com/s/photos/concrete-texture" target="_blank">concrete</a> ·
       <a href="https://unsplash.com/s/photos/wall-mockup" target="_blank">wall mockups</a>
