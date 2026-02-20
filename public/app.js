@@ -409,6 +409,37 @@ document.getElementById('toggle-device-color').addEventListener('click', functio
 // ══════════════════════════
 const saveBtn = document.getElementById('save-btn');
 
+function swapScreensForExport() {
+  const swaps = [];
+  DEVICE_SCREENS.forEach(d => {
+    const img = document.getElementById(d.screen);
+    if (img.style.display === 'none' || !img.src) return;
+    const pos = screenPos[d.screen];
+    const parent = img.parentElement;
+    const div = document.createElement('div');
+    div.style.cssText = `
+      width: 100%; height: 100%;
+      background-image: url(${img.src});
+      background-size: ${pos.zoom < 100 ? 'contain' : 'cover'};
+      background-position: ${pos.x}% ${pos.y}%;
+      background-repeat: no-repeat;
+      background-color: #000;
+      ${pos.zoom !== 100 ? `transform: scale(${pos.zoom / 100}); transform-origin: center center;` : ''}
+    `;
+    img.style.display = 'none';
+    parent.appendChild(div);
+    swaps.push({ img, div, parent });
+  });
+  return swaps;
+}
+
+function restoreScreensAfterExport(swaps) {
+  swaps.forEach(({ img, div, parent }) => {
+    parent.removeChild(div);
+    img.style.display = 'block';
+  });
+}
+
 saveBtn.addEventListener('click', async () => {
   const origText = saveBtn.textContent;
   saveBtn.textContent = 'Saving…';
@@ -420,6 +451,8 @@ saveBtn.addEventListener('click', async () => {
   scene.style.transform = '';
   scene.style.transformOrigin = '';
   scene.style.marginBottom = '';
+
+  const swaps = swapScreensForExport();
 
   try {
     const canvas = await html2canvas(scene, {
@@ -439,6 +472,7 @@ saveBtn.addEventListener('click', async () => {
     console.error('Save failed:', err);
     alert('Save failed — check console for details.');
   } finally {
+    restoreScreensAfterExport(swaps);
     scene.style.transform = savedTransform;
     scene.style.transformOrigin = savedOrigin;
     scene.style.marginBottom = savedMargin;
