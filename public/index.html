@@ -42,7 +42,7 @@
       <button class="toolbar-btn" id="toggle-overlays">Light: On</button>
       <button class="toolbar-btn" id="toggle-device-color">Space Gray</button>
     </div>
-    <button class="toolbar-btn" style="border-color: rgba(0,122,200,0.3); color: #007AC8;">Right-click → Save ↓</button>
+    <button class="toolbar-btn" id="save-btn" style="border-color: rgba(0,122,200,0.3); color: #007AC8;">Save ↓</button>
   </div>
 
   <!-- ── BG PANEL ── -->
@@ -172,13 +172,14 @@
     <p>
       <code>3D View</code> — perspective presets + per-device rotation ·
       <code>Adjust BG</code> — pan & zoom background ·
-      Click devices to add screenshots · <code>Right-click → Save Image</code><br>
+      Click devices to add screenshots · <code>Save ↓</code> to download as PNG<br>
       Backgrounds: <a href="https://unsplash.com/s/photos/stucco-wall" target="_blank">stucco</a> ·
       <a href="https://unsplash.com/s/photos/concrete-texture" target="_blank">concrete</a> ·
       <a href="https://unsplash.com/s/photos/wall-mockup" target="_blank">wall mockups</a>
     </p>
   </div>
 
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

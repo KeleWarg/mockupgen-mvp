@@ -303,6 +303,49 @@ document.getElementById('toggle-device-color').addEventListener('click', functio
 });
 
 // ══════════════════════════
+// SAVE / DOWNLOAD
+// ══════════════════════════
+const saveBtn = document.getElementById('save-btn');
+
+saveBtn.addEventListener('click', async () => {
+  const origText = saveBtn.textContent;
+  saveBtn.textContent = 'Saving…';
+  saveBtn.disabled = true;
+
+  const savedTransform = scene.style.transform;
+  const savedOrigin = scene.style.transformOrigin;
+  const savedMargin = scene.style.marginBottom;
+  scene.style.transform = '';
+  scene.style.transformOrigin = '';
+  scene.style.marginBottom = '';
+
+  try {
+    const canvas = await html2canvas(scene, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      width: 1200,
+      height: 900,
+    });
+
+    const link = document.createElement('a');
+    link.download = `mockup-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error('Save failed:', err);
+    alert('Save failed — check console for details.');
+  } finally {
+    scene.style.transform = savedTransform;
+    scene.style.transformOrigin = savedOrigin;
+    scene.style.marginBottom = savedMargin;
+    saveBtn.textContent = origText;
+    saveBtn.disabled = false;
+  }
+});
+
+// ══════════════════════════
 // RESPONSIVE SCENE SCALING
 // ══════════════════════════
 const canvasWrapper = document.querySelector('.canvas-wrapper');
