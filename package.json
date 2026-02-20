@@ -1,0 +1,10 @@
+{
+  "name": "device-mockup-composer",
+  "version": "1.0.0",
+  "description": "3D device mockup composer for editorial presentations",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'Static site — no build step needed'",
+    "preview": "npx serve public -p 3000"
+  }
+}

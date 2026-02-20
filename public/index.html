@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Device Mockup Composer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── TOOLBAR ── -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="toolbar-title">Device Mockup Composer</div>
+      <div class="toolbar-sep"></div>
+
+      <div class="toolbar-controls">
+        <img class="preset-thumb active" data-bg="warm-stucco" src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=60&h=60&fit=crop&q=60" title="Warm Stucco" />
+        <img class="preset-thumb" data-bg="concrete" src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=60&h=60&fit=crop&q=60" title="Concrete" />
+        <img class="preset-thumb" data-bg="dark-plaster" src="https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=60&h=60&fit=crop&q=60" title="Dark" />
+        <img class="preset-thumb" data-bg="minimal-light" src="https://images.unsplash.com/photo-1604147706283-d7119b5b822c?w=60&h=60&fit=crop&q=60" title="Light" />
+        <img class="preset-thumb" data-bg="terracotta" src="https://images.unsplash.com/photo-1494253109108-2e30c049369b?w=60&h=60&fit=crop&q=60" title="Warm" />
+      </div>
+
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn upload-bg" id="upload-bg-btn">↑ BG</button>
+      <input type="file" accept="image/*" class="file-input" id="bg-input" />
+      <button class="toolbar-btn" id="adjust-bg-btn">Adjust BG</button>
+
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" id="adjust-3d-btn">3D View</button>
+
+      <div class="toolbar-sep"></div>
+      <span class="toolbar-label">Size</span>
+      <select class="toolbar-select" id="device-size">
+        <option value="sm">Small</option>
+        <option value="md" selected>Medium</option>
+        <option value="lg">Large</option>
+      </select>
+
+      <div class="toolbar-sep"></div>
+      <button class="toolbar-btn" id="toggle-overlays">Light: On</button>
+      <button class="toolbar-btn" id="toggle-device-color">Space Gray</button>
+    </div>
+    <button class="toolbar-btn" style="border-color: rgba(0,122,200,0.3); color: #007AC8;">Right-click → Save ↓</button>
+  </div>
+
+  <!-- ── BG PANEL ── -->
+  <div class="side-panel" id="bg-panel">
+    <div class="panel-title">Background</div>
+    <div class="panel-row"><span class="panel-label">Scale</span><input type="range" class="panel-slider" id="bg-scale" min="50" max="250" value="100" /><span class="panel-value" id="bg-scale-val">100%</span></div>
+    <div class="panel-row"><span class="panel-label">X Pos</span><input type="range" class="panel-slider" id="bg-x" min="0" max="100" value="50" /><span class="panel-value" id="bg-x-val">50%</span></div>
+    <div class="panel-row"><span class="panel-label">Y Pos</span><input type="range" class="panel-slider" id="bg-y" min="0" max="100" value="50" /><span class="panel-value" id="bg-y-val">50%</span></div>
+    <div class="panel-hint">Drag scene to pan · Scroll to zoom</div>
+    <div style="display:flex;gap:6px;">
+      <button class="panel-btn" id="bg-reset">Reset</button>
+      <button class="panel-btn" id="bg-done" style="border-color:#007AC8;color:#007AC8;">Done</button>
+    </div>
+  </div>
+
+  <!-- ── 3D PANEL ── -->
+  <div class="side-panel" id="panel-3d">
+    <div class="panel-title">3D Perspective</div>
+
+    <div class="panel-hint" style="color:#007AC8;">Presets</div>
+    <div class="preset-3d-row">
+      <button class="preset-3d" data-preset="flat">Flat</button>
+      <button class="preset-3d active" data-preset="subtle">Subtle</button>
+      <button class="preset-3d" data-preset="editorial">Editorial</button>
+      <button class="preset-3d" data-preset="dramatic">Dramatic</button>
+      <button class="preset-3d" data-preset="hero">Hero Shot</button>
+      <button class="preset-3d" data-preset="spread">Fan Spread</button>
+    </div>
+
+    <div class="panel-divider"></div>
+    <div class="panel-hint">Global</div>
+    <div class="panel-row"><span class="panel-label">Persp.</span><input type="range" class="panel-slider" id="perspective" min="400" max="3000" value="1200" /><span class="panel-value" id="perspective-val">1200</span></div>
+    <div class="panel-row"><span class="panel-label">Tilt X</span><input type="range" class="panel-slider" id="group-rx" min="-30" max="30" value="8" /><span class="panel-value" id="group-rx-val">8°</span></div>
+    <div class="panel-row"><span class="panel-label">Turn Y</span><input type="range" class="panel-slider" id="group-ry" min="-30" max="30" value="0" /><span class="panel-value" id="group-ry-val">0°</span></div>
+
+    <div class="panel-divider"></div>
+    <div class="panel-hint">iPad Portrait</div>
+    <div class="panel-row"><span class="panel-label">Turn Y</span><input type="range" class="panel-slider" id="ipadP-ry" min="-40" max="40" value="15" /><span class="panel-value" id="ipadP-ry-val">15°</span></div>
+    <div class="panel-row"><span class="panel-label">Tilt X</span><input type="range" class="panel-slider" id="ipadP-rx" min="-20" max="20" value="0" /><span class="panel-value" id="ipadP-rx-val">0°</span></div>
+
+    <div class="panel-divider"></div>
+    <div class="panel-hint">iPhone</div>
+    <div class="panel-row"><span class="panel-label">Turn Y</span><input type="range" class="panel-slider" id="iphone-ry" min="-40" max="40" value="0" /><span class="panel-value" id="iphone-ry-val">0°</span></div>
+    <div class="panel-row"><span class="panel-label">Tilt X</span><input type="range" class="panel-slider" id="iphone-rx" min="-20" max="20" value="0" /><span class="panel-value" id="iphone-rx-val">0°</span></div>
+
+    <div class="panel-divider"></div>
+    <div class="panel-hint">iPad Landscape</div>
+    <div class="panel-row"><span class="panel-label">Turn Y</span><input type="range" class="panel-slider" id="ipadL-ry" min="-40" max="40" value="-12" /><span class="panel-value" id="ipadL-ry-val">-12°</span></div>
+    <div class="panel-row"><span class="panel-label">Tilt X</span><input type="range" class="panel-slider" id="ipadL-rx" min="-20" max="20" value="0" /><span class="panel-value" id="ipadL-rx-val">0°</span></div>
+
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button class="panel-btn" id="reset-3d">Reset All</button>
+      <button class="panel-btn" id="done-3d" style="border-color:#007AC8;color:#007AC8;">Done</button>
+    </div>
+  </div>
+
+  <!-- ── CANVAS ── -->
+  <div class="canvas-wrapper">
+    <div class="scene" id="scene">
+      <div class="bg-image" id="bg-image"></div>
+      <div class="adjust-badge">Drag to pan · Scroll to zoom</div>
+      <div class="scene-overlay light-bands"></div>
+      <div class="scene-overlay vignette"></div>
+      <div class="scene-overlay warm-light"></div>
+
+      <div class="devices-row" id="devices-row">
+
+        <!-- iPad Portrait -->
+        <div class="device ipad-portrait size-md device-dark" id="dev-ipad-portrait">
+          <div class="ipad-frame"><div class="shell">
+            <div class="screen-glass">
+              <div class="screen-placeholder" id="ipad-portrait-placeholder" onclick="document.getElementById('ipad-portrait-input').click()">
+                <div class="placeholder-icon">+</div>
+                <div class="placeholder-label">iPad · Portrait</div>
+                <div class="placeholder-hint">Click to add</div>
+              </div>
+              <img class="device-screen" id="ipad-portrait-screen" style="display:none;" />
+            </div>
+            <div class="front-camera"></div>
+          </div></div>
+          <input type="file" accept="image/*" class="file-input" id="ipad-portrait-input" />
+        </div>
+
+        <!-- iPhone -->
+        <div class="device iphone size-md device-dark" id="dev-iphone">
+          <div class="iphone-frame"><div class="shell">
+            <div class="btn-action"></div>
+            <div class="btn-volume-up"></div>
+            <div class="btn-volume-down"></div>
+            <div class="btn-power"></div>
+            <div class="screen-glass">
+              <div class="dynamic-island"></div>
+              <div class="screen-placeholder" id="iphone-placeholder" onclick="document.getElementById('iphone-input').click()">
+                <div class="placeholder-icon">+</div>
+                <div class="placeholder-label">iPhone</div>
+                <div class="placeholder-hint">Click to add</div>
+              </div>
+              <img class="device-screen" id="iphone-screen" style="display:none;" />
+            </div>
+          </div></div>
+          <input type="file" accept="image/*" class="file-input" id="iphone-input" />
+        </div>
+
+        <!-- iPad Landscape -->
+        <div class="device ipad-landscape size-md device-dark" id="dev-ipad-landscape">
+          <div class="ipad-frame"><div class="shell">
+            <div class="screen-glass">
+              <div class="screen-placeholder" id="ipad-landscape-placeholder" onclick="document.getElementById('ipad-landscape-input').click()">
+                <div class="placeholder-icon">+</div>
+                <div class="placeholder-label">iPad · Landscape</div>
+                <div class="placeholder-hint">Click to add</div>
+              </div>
+              <img class="device-screen" id="ipad-landscape-screen" style="display:none;" />
+            </div>
+            <div class="front-camera"></div>
+          </div></div>
+          <input type="file" accept="image/*" class="file-input" id="ipad-landscape-input" />
+        </div>
+
+      </div>
+
+      <div class="watermark">2026</div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <p>
+      <code>3D View</code> — perspective presets + per-device rotation ·
+      <code>Adjust BG</code> — pan & zoom background ·
+      Click devices to add screenshots · <code>Right-click → Save Image</code><br>
+      Backgrounds: <a href="https://unsplash.com/s/photos/stucco-wall" target="_blank">stucco</a> ·
+      <a href="https://unsplash.com/s/photos/concrete-texture" target="_blank">concrete</a> ·
+      <a href="https://unsplash.com/s/photos/wall-mockup" target="_blank">wall mockups</a>
+    </p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
